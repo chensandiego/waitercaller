@@ -8,15 +8,19 @@ from flask.ext.login import login_required
 from flask.ext.login import login_user
 from flask.ext.login import logout_user
 from flask.ext.login import current_user
+#import config
+#from mockdbhelper import MockDBHelper as DBHelper
 
-from mockdbhelper import MockDBHelper as DBHelper
+from dbhelper import DBHelper
+
+
 from passwordhelper import PasswordHelper
 from bitlyhelper import BitlyHelper
 from forms import RegistrationForm
 from forms import LoginForm
 from forms import CreateTableForm
 from user import User
-import config
+
 import datetime
 
 
@@ -128,8 +132,8 @@ def account_deletetable():
 
 @app.route("/newrequest/<tid>")
 def new_request(tid):
-    DB.add_request(tid,datetime.datetime.now())
-    return "Your request has been logged and a waiter will be withyou shortly"
-
+    if DB.add_request(tid,datetime.datetime.now()):
+        return "Your request has been logged and a waiter will be withyou shortly"
+    return "There is already a request pending for this table. Please be patient, a waiter will be there asap"
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
